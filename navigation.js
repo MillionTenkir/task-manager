@@ -31,8 +31,8 @@ const AuthStack = () => {
   );
 };
 
-// Main App Navigator with Bottom Tabs
-const AppTabs = () => {
+// Admin Navigator with Bottom Tabs
+const AdminTabs = () => {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -66,17 +66,61 @@ const AppTabs = () => {
   );
 };
 
+// Employee Navigator with Bottom Tabs (limited access)
+const EmployeeTabs = () => {
+  return (
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+
+          if (route.name === "My Tasks") {
+            iconName = focused ? "list" : "list-outline";
+          } else if (route.name === "Completed") {
+            iconName = focused
+              ? "checkmark-circle"
+              : "checkmark-circle-outline";
+          } else if (route.name === "Account") {
+            iconName = focused ? "person" : "person-outline";
+          }
+
+          return <Ionicons name={iconName} size={size} color={color} />;
+        },
+        tabBarActiveTintColor: "#007AFF",
+        tabBarInactiveTintColor: "gray",
+        headerShown: false,
+      })}
+    >
+      <Tab.Screen name="My Tasks" component={MyTasksScreen} />
+      <Tab.Screen name="Completed" component={CompletedScreen} />
+      <Tab.Screen name="Account" component={AccountScreen} />
+    </Tab.Navigator>
+  );
+};
+
 // Root Navigator
 export default function Navigation() {
-  const { isLoading, userToken } = useAuth();
+  const { isLoading, userToken, userInfo } = useAuth();
 
   if (isLoading) {
     return <LoadingScreen />;
   }
+  
+  // Determine which navigation to show based on user role
+  const renderNavigator = () => {
+    if (!userToken) return <AuthStack />;
+    
+    // Check user role and render appropriate tabs
+    if (userInfo && userInfo.role === 'admin') {
+      return <AdminTabs />;
+    } else {
+      return <EmployeeTabs />;
+    }
+  };
 
   return (
     <NavigationContainer>
-      {userToken ? <AppTabs /> : <AuthStack />}
+      {renderNavigator()}
     </NavigationContainer>
   );
 }

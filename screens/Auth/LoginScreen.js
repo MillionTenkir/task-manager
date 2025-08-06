@@ -10,6 +10,7 @@ import {
   Platform,
   ScrollView,
   Alert,
+  Switch,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useAuth } from "../../context/AuthContext";
@@ -18,6 +19,7 @@ const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const { login } = useAuth();
 
@@ -30,7 +32,9 @@ const LoginScreen = ({ navigation }) => {
     setIsLoading(true);
 
     try {
-      const result = await login(email, password);
+      // Set the email based on the role selected
+      const loginEmail = isAdmin ? `admin-${email}` : email;
+      const result = await login(loginEmail, password);
 
       if (!result) {
         Alert.alert("Login Failed", "Invalid email or password");
@@ -83,6 +87,22 @@ const LoginScreen = ({ navigation }) => {
               value={password}
               onChangeText={setPassword}
             />
+          </View>
+          
+          <View style={styles.roleContainer}>
+            <Text style={styles.roleText}>Login as Admin</Text>
+            <Switch
+              value={isAdmin}
+              onValueChange={setIsAdmin}
+              trackColor={{ false: "#767577", true: "#81b0ff" }}
+              thumbColor={isAdmin ? "#3498db" : "#f4f3f4"}
+            />
+          </View>
+          
+          <View style={styles.roleInfoContainer}>
+            <Text style={styles.roleInfoText}>
+              {isAdmin ? "Admin role: Access to all screens" : "Employee role: Limited access"}
+            </Text>
           </View>
 
           <TouchableOpacity style={styles.forgotPassword}>
@@ -167,6 +187,27 @@ const styles = StyleSheet.create({
     fontSize: 16,
     backgroundColor: "#f9f9f9",
     color: "#333",
+  },
+  roleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 10,
+    paddingHorizontal: 5,
+  },
+  roleText: {
+    fontSize: 16,
+    color: "#333",
+    fontWeight: "500",
+  },
+  roleInfoContainer: {
+    marginBottom: 15,
+    paddingHorizontal: 5,
+  },
+  roleInfoText: {
+    fontSize: 14,
+    color: "#666",
+    fontStyle: "italic",
   },
   forgotPassword: {
     alignItems: "flex-end",

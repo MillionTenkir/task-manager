@@ -14,16 +14,30 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       // This is where you would typically make an API call to authenticate
-      // For this example, we'll simulate a successful login with a dummy token and user info
+      // For this example, we'll simulate a successful login with dummy users based on email
+      
+      // Create two dummy users with different roles
+      let dummyUserInfo;
       const dummyToken = "dummy-auth-token-123456789";
-      const dummyUserInfo = {
-        id: "1",
-        name: "Million Tenkir",
-        email: email,
-        role: "Administrator",
-        avatar:
-          "https://drive.google.com/file/d/1TJQ6_YMIY8r625ESnx4T9AdIFmWXaigS/view?usp=drive_link",
-      };
+      
+      // Check email to determine which dummy user to use
+      if (email.toLowerCase().includes("admin")) {
+        dummyUserInfo = {
+          id: "1",
+          name: "Admin User",
+          email: email,
+          role: "admin",
+          avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+        };
+      } else {
+        dummyUserInfo = {
+          id: "2",
+          name: "Employee User",
+          email: email,
+          role: "employee",
+          avatar: "https://randomuser.me/api/portraits/women/32.jpg",
+        };
+      }
 
       // Store user token and info in AsyncStorage
       await AsyncStorage.setItem("userToken", dummyToken);
@@ -111,6 +125,7 @@ export const AuthProvider = ({ children }) => {
 
   // Check login status on component mount
   useEffect(() => {
+    console.log("Is logged in triggered.  ")
     isLoggedIn();
   }, []);
 
