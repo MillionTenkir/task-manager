@@ -24,18 +24,18 @@ export const AuthProvider = ({ children }) => {
       if (email.toLowerCase().includes("admin")) {
         dummyUserInfo = {
           id: "1",
-          name: "Admin User",
+          name: "Million Tenkir",
           email: email,
           role: "admin",
-          avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+          avatar: "https://robohash.org/milli",
         };
       } else {
         dummyUserInfo = {
           id: "2",
-          name: "Employee User",
+          name: "Bereket Tenkir",
           email: email,
           role: "employee",
-          avatar: "https://randomuser.me/api/portraits/women/32.jpg",
+          avatar: "https://robohash.org/beki",
         };
       }
 

@@ -1,9 +1,13 @@
 import React from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
 import { StatusBar } from "expo-status-bar";
-
+import { useAuth } from "../context/AuthContext";
 const Header = () => {
+  const { userInfo } = useAuth();
+  console.log("user: ",userInfo)
+
   // Dummy user data
+
   const user = {
     name: "Million Tenkir",
     role: "Administrator",
@@ -17,11 +21,11 @@ const Header = () => {
       <View style={styles.header}>
         <View style={styles.userInfo}>
           <Text style={styles.greeting}>Hello,</Text>
-          <Text style={styles.userName}>{user.name}</Text>
-          <Text style={styles.userRole}>{user.role}</Text>
+          <Text style={styles.userName}>{userInfo.name}</Text>
+          <Text style={styles.userRole}>{userInfo.role}</Text>
         </View>
         <View style={styles.avatarContainer}>
-          <Image source={{ uri: user.avatar }} style={styles.avatar} />
+          <Image source={{ uri: userInfo.avatar }} style={styles.avatar} />
         </View>
       </View>
     </View>
